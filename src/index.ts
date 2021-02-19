@@ -17,3 +17,5 @@ const canvas = document.getElementById('root-canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 
 resize(canvas, ctx);
+
+window.addEventListener('resize', () => resize(canvas, ctx));
