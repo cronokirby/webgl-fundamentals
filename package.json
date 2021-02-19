@@ -1,0 +1,15 @@
+{
+  "name": "webgl-fundamentals",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build"
+  },
+  "author": "Lúcás Meier",
+  "license": "MIT",
+  "devDependencies": {
+    "snowpack": "^3.0.11"
+  }
+}
