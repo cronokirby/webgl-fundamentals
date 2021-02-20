@@ -45,6 +45,7 @@ interface Attributes {
 interface Uniforms {
   u_resolution: WebGLUniformLocation;
   u_color: WebGLUniformLocation;
+  u_translation: WebGLUniformLocation;
 }
 
 interface Buffers {
@@ -70,6 +71,7 @@ class Context {
     const uniforms = {
       u_resolution: gl.getUniformLocation(program, 'u_resolution'),
       u_color: gl.getUniformLocation(program, 'u_color'),
+      u_translation: gl.getUniformLocation(program, 'u_translation'),
     };
     const buffers = {
       position: gl.createBuffer(),
@@ -77,11 +79,11 @@ class Context {
     return new Context(gl, program, attributes, uniforms, buffers);
   }
 
-  private setRectangle(x: number, y: number, width: number, height: number) {
-    const x1 = x;
-    const x2 = x + width;
-    const y1 = y;
-    const y2 = y + height;
+  setRectangle() {
+    const x1 = 0;
+    const x2 = 100;
+    const y1 = 0;
+    const y2 = 200;
 
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
@@ -90,10 +92,7 @@ class Context {
     );
   }
 
-  draw() {
-    const translation = [0, 0];
-    const width = 100;
-    const height = 30;
+  draw(translation: [number, number]) {
     const color = [Math.random(), Math.random(), Math.random(), 1];
 
     this.gl.viewport(0.0, 0.0, this.gl.canvas.width, this.gl.canvas.height);
@@ -102,8 +101,6 @@ class Context {
     this.gl.useProgram(this.program);
     this.gl.enableVertexAttribArray(this.attributes.a_position);
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.position);
-
-    this.setRectangle(translation[0], translation[1], width, height);
 
     this.gl.vertexAttribPointer(
       this.attributes.a_position,
@@ -119,6 +116,11 @@ class Context {
       this.gl.canvas.width,
       this.gl.canvas.height,
     );
+    this.gl.uniform2f(
+      this.uniforms.u_translation,
+      translation[0],
+      translation[1],
+    );
     this.gl.uniform4fv(this.uniforms.u_color, color);
 
     this.gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -127,7 +129,7 @@ class Context {
   resize() {
     this.gl.canvas.width = document.body.clientWidth;
     this.gl.canvas.height = document.body.clientHeight;
-    this.draw();
+    this.draw([0, 0]);
   }
 }
 
@@ -135,6 +137,7 @@ class Context {
 const canvas = document.getElementById('root-canvas') as HTMLCanvasElement;
 const gl = canvas.getContext('webgl');
 const ctx = Context.init(gl);
+ctx.setRectangle();
 
 window.addEventListener('resize', () => ctx.resize());
 ctx.resize();
